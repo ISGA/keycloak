@@ -26,6 +26,7 @@ import static org.keycloak.quarkus.runtime.configuration.ConfigArgsConfigSource.
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import io.smallrye.config.SmallRyeConfig;
 import org.hibernate.dialect.H2Dialect;
@@ -38,6 +39,7 @@ import org.hibernate.dialect.MariaDBDialect;
 import org.junit.Assert;
 import org.junit.Test;
 import org.keycloak.Config;
+import org.keycloak.config.CachingOptions;
 import org.keycloak.quarkus.runtime.configuration.ConfigArgsConfigSource;
 
 import org.keycloak.quarkus.runtime.Environment;
@@ -485,5 +487,21 @@ public class ConfigurationTest extends AbstractConfigurationTest {
         assertNull(createConfig().getConfigValue("quarkus.http.ssl.certificate.reload-period").getValue());
         ConfigArgsConfigSource.setCliArgs("--https-certificates-reload-period=2h");
         assertEquals("2h", createConfig().getConfigValue("quarkus.http.ssl.certificate.reload-period").getValue());
+    }
+
+    @Test
+    public void testCacheMaxCount() {
+        int maxCount = 500;
+        int numCaches = CachingOptions.MAX_COUNT_CACHES.length;
+        String[] args = new String[numCaches];
+        for (int i = 0; i < numCaches; i++)
+            args[i] = String.format("--%s=%d", CachingOptions.cacheMaxCountProperty(CachingOptions.MAX_COUNT_CACHES[i]), maxCount);
+
+        ConfigArgsConfigSource.setCliArgs(args);
+        SmallRyeConfig config = createConfig();
+        for (String cache : CachingOptions.MAX_COUNT_CACHES) {
+            String prop = "kc." + CachingOptions.cacheMaxCountProperty(cache);
+            assertEquals(Integer.toString(maxCount), config.getConfigValue(prop).getValue());
+        }
     }
 }

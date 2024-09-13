@@ -21,6 +21,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -60,6 +61,7 @@ import org.keycloak.common.Profile;
 import org.keycloak.common.util.MultiSiteUtils;
 import org.keycloak.config.CachingOptions;
 import org.keycloak.config.MetricsOptions;
+import org.keycloak.connections.infinispan.InfinispanConnectionProvider;
 import org.keycloak.infinispan.util.InfinispanUtils;
 import org.keycloak.marshalling.KeycloakIndexSchemaUtil;
 import org.keycloak.marshalling.KeycloakModelSchema;
@@ -87,6 +89,7 @@ import static org.keycloak.connections.infinispan.InfinispanConnectionProvider.L
 import static org.keycloak.connections.infinispan.InfinispanConnectionProvider.OFFLINE_CLIENT_SESSION_CACHE_NAME;
 import static org.keycloak.connections.infinispan.InfinispanConnectionProvider.OFFLINE_USER_SESSION_CACHE_NAME;
 import static org.keycloak.connections.infinispan.InfinispanConnectionProvider.USER_SESSION_CACHE_NAME;
+import static org.keycloak.connections.infinispan.InfinispanConnectionProvider.WORK_CACHE_NAME;
 import static org.keycloak.connections.infinispan.InfinispanConnectionProvider.skipSessionsCacheIfRequired;
 import static org.wildfly.security.sasl.util.SaslMechanismInformation.Names.SCRAM_SHA_512;
 
@@ -313,6 +316,7 @@ public class CacheManagerFactory {
                 configureRemoteStores(builder);
             }
             configureSessionsCaches(builder);
+            configureCacheMaxCount(builder);
         }
 
         checkForRemoteStores(builder);
@@ -498,6 +502,23 @@ public class CacheManagerFactory {
                         }
                     }
                 });
+    }
+
+    private static void configureCacheMaxCount(ConfigurationBuilderHolder holder) {
+        Stream.of(InfinispanConnectionProvider.LOCAL_CACHE_NAMES, CLUSTERED_CACHE_NAMES)
+              .flatMap(Arrays::stream)
+              .filter(cache -> !cache.equals(WORK_CACHE_NAME) && !cache.endsWith("Revisions"))
+              .forEach(cache -> {
+                  String propKey = CachingOptions.cacheMaxCountProperty(cache);
+                  Optional<String> prop = Configuration.getOptionalKcValue(propKey);
+                  if (prop.isPresent()) {
+                      int maxCount = Integer.parseInt(prop.get());
+                      holder.getNamedConfigurationBuilders()
+                            .get(cache)
+                            .memory()
+                            .maxCount(maxCount);
+                  }
+              });
     }
 
     private static String requiredStringProperty(String propertyName) {
