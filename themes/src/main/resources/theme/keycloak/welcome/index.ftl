@@ -7,21 +7,23 @@
     <meta name="color-scheme" content="light dark">
     <title>Welcome to ${productName}</title>
     <script type="module" async blocking="render">
-      const DARK_MODE_CLASS = "pf-v5-theme-dark";
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        const DARK_MODE_CLASS = "${properties.kcDarkModeClass}";
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-      updateDarkMode(mediaQuery.matches);
-      mediaQuery.addEventListener("change", (event) => updateDarkMode(event.matches));
-
-      function updateDarkMode(isEnabled) {
-        const { classList } = document.documentElement;
-
-        if (isEnabled) {
-          classList.add(DARK_MODE_CLASS);
-        } else {
-          classList.remove(DARK_MODE_CLASS);
+        if (${properties.kcDarkModeSwitchEnabled}) {
+          updateDarkMode(mediaQuery.matches);
+          mediaQuery.addEventListener("change", (event) => updateDarkMode(event.matches));
         }
-      }
+
+        function updateDarkMode(isEnabled) {
+          const { classList } = document.documentElement;
+
+          if (isEnabled) {
+            classList.add(DARK_MODE_CLASS);
+          } else {
+            classList.remove(DARK_MODE_CLASS);
+          }
+        }
     </script>
     <link rel="shortcut icon" href="${resourcesCommonPath}/img/favicon.ico">
     <#if properties.stylesCommon?has_content>

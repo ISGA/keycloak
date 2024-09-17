@@ -37,11 +37,13 @@
     </#if>
     <title>${msg("loginTitle",(realm.displayName!''))}</title>
     <script type="module" async blocking="render">
-        const DARK_MODE_CLASS = "pf-v5-theme-dark";
+        const DARK_MODE_CLASS = "${properties.kcDarkModeClass}";
         const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-        updateDarkMode(mediaQuery.matches);
-        mediaQuery.addEventListener("change", (event) => updateDarkMode(event.matches));
+        if (${properties.kcDarkModeSwitchEnabled}) {
+          updateDarkMode(mediaQuery.matches);
+          mediaQuery.addEventListener("change", (event) => updateDarkMode(event.matches));
+        }
 
         function updateDarkMode(isEnabled) {
           const { classList } = document.documentElement;
