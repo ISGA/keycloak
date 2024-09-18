@@ -1,7 +1,6 @@
 package org.keycloak.config;
 
 import java.io.File;
-import java.util.stream.Stream;
 
 import com.google.common.base.CaseFormat;
 
@@ -27,16 +26,9 @@ public class CachingOptions {
     private static final String CACHE_METRICS_PREFIX = "cache-metrics";
     public static final String CACHE_METRICS_HISTOGRAMS_ENABLED_PROPERTY = CACHE_METRICS_PREFIX + "-histograms-enabled";
 
-    public static final String[] MAX_COUNT_CACHES = new String[]{"authorization", "keys", "realms", "users", "actionTokens",
-          "authenticationSessions", "clientSessions", "loginFailures", "offlineSessions", "offlineClientSessions", "sessions"};
-    public static final Option<?>[] MAX_COUNT_OPTIONS = Stream.of(MAX_COUNT_CACHES)
-          .map(cache ->
-                new OptionBuilder<>(cacheMaxCountProperty(cache), Integer.class)
-                      .category(OptionCategory.CACHE)
-                      .description(String.format("The maximum number of entries that can be stored in-memory by the %s cache.", cache))
-                      .build()
-          )
-          .toArray(Option[]::new);
+    public static final String[] LOCAL_MAX_COUNT_CACHES = new String[]{"authorization", "keys", "realms", "users", };
+
+    public static final String[] CLUSTERED_MAX_COUNT_CACHES = new String[]{"clientSessions", "offlineSessions", "offlineClientSessions", "sessions"};
 
     public enum Mechanism {
         ispn,
@@ -143,6 +135,13 @@ public class CachingOptions {
             .description("Enable TLS support to communicate with a secured remote Infinispan server. Recommended to be enabled in production.")
             .defaultValue(Boolean.TRUE)
             .build();
+
+    public static Option<Integer> maxCountOption(String cache) {
+        return new OptionBuilder<>(cacheMaxCountProperty(cache), Integer.class)
+              .category(OptionCategory.CACHE)
+              .description(String.format("The maximum number of entries that can be stored in-memory by the %s cache.", cache))
+              .build();
+    }
 
     public static String cacheMaxCountProperty(String cacheName) {
         cacheName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_HYPHEN, cacheName);

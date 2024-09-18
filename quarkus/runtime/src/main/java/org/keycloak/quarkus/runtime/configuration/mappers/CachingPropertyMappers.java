@@ -6,11 +6,16 @@ import static org.keycloak.quarkus.runtime.configuration.mappers.PropertyMapper.
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.stream.Stream;
 
 import org.keycloak.config.CachingOptions;
+import org.keycloak.config.OptionBuilder;
+import org.keycloak.config.OptionCategory;
 import org.keycloak.infinispan.util.InfinispanUtils;
 import org.keycloak.quarkus.runtime.Environment;
 
@@ -24,16 +29,7 @@ final class CachingPropertyMappers {
     }
 
     public static PropertyMapper<?>[] getClusteringPropertyMappers() {
-        PropertyMapper<?>[] maxCountMappers = Stream.of(CachingOptions.MAX_COUNT_OPTIONS)
-              .map(opt ->
-                    fromOption(opt)
-                          .isEnabled(InfinispanUtils::isEmbeddedInfinispan)
-                          .paramLabel("max-count")
-                          .build()
-              )
-              .toArray(PropertyMapper[]::new);
-
-        PropertyMapper<?>[] mappers = new PropertyMapper[]{
+        List<PropertyMapper<?>> staticMappers = List.of(
               fromOption(CachingOptions.CACHE)
                     .paramLabel("type")
                     .build(),
@@ -84,11 +80,20 @@ final class CachingPropertyMappers {
                     .build(),
               fromOption(CachingOptions.CACHE_METRICS_HISTOGRAMS_ENABLED)
                     .isEnabled(MetricsPropertyMappers::metricsEnabled, MetricsPropertyMappers.METRICS_ENABLED_MSG)
-                    .build(),
-        };
-        PropertyMapper<?>[] allMappers = Arrays.copyOf(mappers, mappers.length + maxCountMappers.length);
-        System.arraycopy(maxCountMappers, 0, allMappers, mappers.length, maxCountMappers.length);
-        return allMappers;
+                    .build()
+              );
+
+        int numMappers = staticMappers.size() + CachingOptions.LOCAL_MAX_COUNT_CACHES.length + CachingOptions.CLUSTERED_MAX_COUNT_CACHES.length;
+        List<PropertyMapper<?>> mappers = new ArrayList<>(numMappers);
+        mappers.addAll(staticMappers);
+
+        for (String cache : CachingOptions.LOCAL_MAX_COUNT_CACHES)
+            mappers.add(maxCountOpt(cache, () -> true));
+
+        for (String cache : CachingOptions.CLUSTERED_MAX_COUNT_CACHES)
+            mappers.add(maxCountOpt(cache, InfinispanUtils::isEmbeddedInfinispan));
+
+        return mappers.toArray(new PropertyMapper[0]);
     }
 
     private static boolean remoteHostSet() {
@@ -140,5 +145,12 @@ final class CachingPropertyMappers {
         }
 
         return null;
+    }
+
+    private static PropertyMapper<?> maxCountOpt(String cacheName, BooleanSupplier isEnabled) {
+        return fromOption(CachingOptions.maxCountOption(cacheName))
+              .isEnabled(isEnabled)
+              .paramLabel("max-count")
+              .build();
     }
 }

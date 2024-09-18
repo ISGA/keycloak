@@ -89,7 +89,6 @@ import static org.keycloak.connections.infinispan.InfinispanConnectionProvider.L
 import static org.keycloak.connections.infinispan.InfinispanConnectionProvider.OFFLINE_CLIENT_SESSION_CACHE_NAME;
 import static org.keycloak.connections.infinispan.InfinispanConnectionProvider.OFFLINE_USER_SESSION_CACHE_NAME;
 import static org.keycloak.connections.infinispan.InfinispanConnectionProvider.USER_SESSION_CACHE_NAME;
-import static org.keycloak.connections.infinispan.InfinispanConnectionProvider.WORK_CACHE_NAME;
 import static org.keycloak.connections.infinispan.InfinispanConnectionProvider.skipSessionsCacheIfRequired;
 import static org.wildfly.security.sasl.util.SaslMechanismInformation.Names.SCRAM_SHA_512;
 
@@ -505,9 +504,8 @@ public class CacheManagerFactory {
     }
 
     private static void configureCacheMaxCount(ConfigurationBuilderHolder holder) {
-        Stream.of(InfinispanConnectionProvider.LOCAL_CACHE_NAMES, CLUSTERED_CACHE_NAMES)
+        Stream.of(InfinispanConnectionProvider.LOCAL_BOUNDED_CACHE_NAMES, InfinispanConnectionProvider.CLUSTERED_BOUNDED_CACHE_NAMES)
               .flatMap(Arrays::stream)
-              .filter(cache -> !cache.equals(WORK_CACHE_NAME) && !cache.endsWith("Revisions"))
               .forEach(cache -> {
                   String propKey = CachingOptions.cacheMaxCountProperty(cache);
                   Optional<String> prop = Configuration.getOptionalKcValue(propKey);

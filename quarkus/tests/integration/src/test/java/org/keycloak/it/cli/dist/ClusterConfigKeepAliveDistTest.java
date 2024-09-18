@@ -20,12 +20,18 @@ package org.keycloak.it.cli.dist;
 import static io.restassured.RestAssured.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.infinispan.commons.dataconversion.MediaType;
 import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.configuration.parsing.ConfigurationBuilderHolder;
 import org.infinispan.configuration.parsing.ParserRegistry;
 import org.junit.jupiter.api.Test;
 import org.keycloak.config.CachingOptions;
+import org.keycloak.connections.infinispan.InfinispanConnectionProvider;
 import org.keycloak.it.junit5.extension.DistributionTest;
 import org.keycloak.it.junit5.extension.RawDistOnly;
 import org.keycloak.it.junit5.extension.TestProvider;
@@ -44,17 +50,19 @@ public class ClusterConfigKeepAliveDistTest {
     @TestProvider(TestRealmResourceTestProvider.class)
     void testMaxCountApplied(KeycloakDistribution dist) {
         int maxCount = 100;
-        int numCaches = CachingOptions.MAX_COUNT_CACHES.length;
-        String[] args = new String[numCaches + 2];
-        args[0] = "start-dev";
-        args[1] = "--cache=ispn";
-        for (int i = 0; i < numCaches; i++)
-            args[i + 2] = String.format("--%s=%d", CachingOptions.cacheMaxCountProperty(CachingOptions.MAX_COUNT_CACHES[i]), maxCount);
+        Set<String> maxCountCaches = Stream.of(InfinispanConnectionProvider.LOCAL_BOUNDED_CACHE_NAMES, InfinispanConnectionProvider.CLUSTERED_BOUNDED_CACHE_NAMES)
+              .flatMap(Arrays::stream)
+              .collect(Collectors.toSet());
 
-        dist.run(args);
+        StringBuilder sb = new StringBuilder("start-dev --cache=ispn");
+        for (String cache : maxCountCaches)
+            sb.append(" --").append(CachingOptions.cacheMaxCountProperty(cache)).append("=").append(maxCount);
+
+        String args = sb.toString();
+        dist.run(args.split(" "));
+
         ParserRegistry parserRegistry = new ParserRegistry();
-
-        for (String cache : CachingOptions.MAX_COUNT_CACHES) {
+        for (String cache : maxCountCaches) {
             String configJson = when()
                   .get("/realms/master/test-resources/cache/" + cache + "/config")
                   .thenReturn()

@@ -24,9 +24,12 @@ import static org.keycloak.quarkus.runtime.Environment.isWindows;
 import static org.keycloak.quarkus.runtime.configuration.ConfigArgsConfigSource.CLI_ARGS;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.smallrye.config.SmallRyeConfig;
 import org.hibernate.dialect.H2Dialect;
@@ -36,10 +39,12 @@ import io.smallrye.config.PropertiesConfigSource;
 import io.smallrye.config.SmallRyeConfigBuilder;
 import org.h2.Driver;
 import org.hibernate.dialect.MariaDBDialect;
+import org.infinispan.api.Infinispan;
 import org.junit.Assert;
 import org.junit.Test;
 import org.keycloak.Config;
 import org.keycloak.config.CachingOptions;
+import org.keycloak.connections.infinispan.InfinispanConnectionProvider;
 import org.keycloak.quarkus.runtime.configuration.ConfigArgsConfigSource;
 
 import org.keycloak.quarkus.runtime.Environment;
@@ -492,14 +497,19 @@ public class ConfigurationTest extends AbstractConfigurationTest {
     @Test
     public void testCacheMaxCount() {
         int maxCount = 500;
-        int numCaches = CachingOptions.MAX_COUNT_CACHES.length;
-        String[] args = new String[numCaches];
-        for (int i = 0; i < numCaches; i++)
-            args[i] = String.format("--%s=%d", CachingOptions.cacheMaxCountProperty(CachingOptions.MAX_COUNT_CACHES[i]), maxCount);
+        Set<String> maxCountCaches = Stream.of(InfinispanConnectionProvider.LOCAL_BOUNDED_CACHE_NAMES, InfinispanConnectionProvider.CLUSTERED_BOUNDED_CACHE_NAMES)
+              .flatMap(Arrays::stream)
+              .collect(Collectors.toSet());
 
-        ConfigArgsConfigSource.setCliArgs(args);
+        StringBuilder sb = new StringBuilder();
+        for (String cache : maxCountCaches)
+            sb.append(" --").append(CachingOptions.cacheMaxCountProperty(cache)).append("=").append(maxCount);
+
+        String args = sb.toString();
+        ConfigArgsConfigSource.setCliArgs(args.split(" "));
         SmallRyeConfig config = createConfig();
-        for (String cache : CachingOptions.MAX_COUNT_CACHES) {
+
+        for (String cache : maxCountCaches) {
             String prop = "kc." + CachingOptions.cacheMaxCountProperty(cache);
             assertEquals(Integer.toString(maxCount), config.getConfigValue(prop).getValue());
         }

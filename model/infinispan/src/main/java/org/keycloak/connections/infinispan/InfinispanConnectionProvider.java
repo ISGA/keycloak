@@ -100,7 +100,19 @@ public interface InfinispanConnectionProvider extends Provider {
             WORK_CACHE_NAME
     };
 
-    String[] ALL_CACHES_NAME = Stream.concat(Arrays.stream(LOCAL_CACHE_NAMES), Arrays.stream(CLUSTERED_CACHE_NAMES)).toArray(String[]::new);
+    String[] LOCAL_BOUNDED_CACHE_NAMES = {
+          AUTHORIZATION_CACHE_NAME,
+          KEYS_CACHE_NAME,
+          REALM_CACHE_NAME,
+          USER_CACHE_NAME,
+    };
+
+    String[] CLUSTERED_BOUNDED_CACHE_NAMES = {
+          CLIENT_SESSION_CACHE_NAME,
+          OFFLINE_USER_SESSION_CACHE_NAME,
+          OFFLINE_CLIENT_SESSION_CACHE_NAME,
+          USER_SESSION_CACHE_NAME,
+    };
 
     /**
      *
