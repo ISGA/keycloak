@@ -21,7 +21,6 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -61,7 +60,6 @@ import org.keycloak.common.Profile;
 import org.keycloak.common.util.MultiSiteUtils;
 import org.keycloak.config.CachingOptions;
 import org.keycloak.config.MetricsOptions;
-import org.keycloak.connections.infinispan.InfinispanConnectionProvider;
 import org.keycloak.infinispan.util.InfinispanUtils;
 import org.keycloak.marshalling.KeycloakIndexSchemaUtil;
 import org.keycloak.marshalling.KeycloakModelSchema;
@@ -314,10 +312,10 @@ public class CacheManagerFactory {
                 configureTransportStack(builder);
                 configureRemoteStores(builder);
             }
+            configureCacheMaxCount(builder, CachingOptions.CLUSTERED_MAX_COUNT_CACHES);
             configureSessionsCaches(builder);
-            configureCacheMaxCount(builder);
         }
-
+        configureCacheMaxCount(builder, CachingOptions.LOCAL_MAX_COUNT_CACHES);
         checkForRemoteStores(builder);
 
         var start = isStartEagerly();
@@ -503,16 +501,17 @@ public class CacheManagerFactory {
                 });
     }
 
-    private static void configureCacheMaxCount(ConfigurationBuilderHolder holder) {
-        Stream.of(InfinispanConnectionProvider.LOCAL_BOUNDED_CACHE_NAMES, InfinispanConnectionProvider.CLUSTERED_BOUNDED_CACHE_NAMES)
-              .flatMap(Arrays::stream)
-              .forEach(cache -> {
-                  var memoryConfig = holder.getNamedConfigurationBuilders().get(cache).memory();
-                  String propKey = CachingOptions.cacheMaxCountProperty(cache);
-                  Configuration.getOptionalKcValue(propKey)
-                          .map(Integer::parseInt)
-                          .ifPresent(memoryConfig::maxCount);
-              });
+    private static void configureCacheMaxCount(ConfigurationBuilderHolder holder, String[] caches) {
+        for (String cache : caches) {
+            String propKey = CachingOptions.cacheMaxCountProperty(cache);
+            Configuration.getOptionalKcValue(propKey)
+                  .map(Integer::parseInt)
+                  .ifPresent(maxCount -> holder.getNamedConfigurationBuilders()
+                        .get(cache)
+                        .memory()
+                        .maxCount(maxCount)
+                  );
+        }
     }
 
     private static String requiredStringProperty(String propertyName) {

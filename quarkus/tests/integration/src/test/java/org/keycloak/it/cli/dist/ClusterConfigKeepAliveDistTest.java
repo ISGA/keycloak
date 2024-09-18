@@ -31,7 +31,6 @@ import org.infinispan.configuration.parsing.ConfigurationBuilderHolder;
 import org.infinispan.configuration.parsing.ParserRegistry;
 import org.junit.jupiter.api.Test;
 import org.keycloak.config.CachingOptions;
-import org.keycloak.connections.infinispan.InfinispanConnectionProvider;
 import org.keycloak.it.junit5.extension.DistributionTest;
 import org.keycloak.it.junit5.extension.RawDistOnly;
 import org.keycloak.it.junit5.extension.TestProvider;
@@ -50,7 +49,7 @@ public class ClusterConfigKeepAliveDistTest {
     @TestProvider(TestRealmResourceTestProvider.class)
     void testMaxCountApplied(KeycloakDistribution dist) {
         int maxCount = 100;
-        Set<String> maxCountCaches = Stream.of(InfinispanConnectionProvider.LOCAL_BOUNDED_CACHE_NAMES, InfinispanConnectionProvider.CLUSTERED_BOUNDED_CACHE_NAMES)
+        Set<String> maxCountCaches = Stream.of(CachingOptions.LOCAL_MAX_COUNT_CACHES, CachingOptions.CLUSTERED_MAX_COUNT_CACHES)
               .flatMap(Arrays::stream)
               .collect(Collectors.toSet());
 

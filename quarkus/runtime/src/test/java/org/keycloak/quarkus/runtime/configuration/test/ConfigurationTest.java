@@ -39,12 +39,10 @@ import io.smallrye.config.PropertiesConfigSource;
 import io.smallrye.config.SmallRyeConfigBuilder;
 import org.h2.Driver;
 import org.hibernate.dialect.MariaDBDialect;
-import org.infinispan.api.Infinispan;
 import org.junit.Assert;
 import org.junit.Test;
 import org.keycloak.Config;
 import org.keycloak.config.CachingOptions;
-import org.keycloak.connections.infinispan.InfinispanConnectionProvider;
 import org.keycloak.quarkus.runtime.configuration.ConfigArgsConfigSource;
 
 import org.keycloak.quarkus.runtime.Environment;
@@ -497,7 +495,7 @@ public class ConfigurationTest extends AbstractConfigurationTest {
     @Test
     public void testCacheMaxCount() {
         int maxCount = 500;
-        Set<String> maxCountCaches = Stream.of(InfinispanConnectionProvider.LOCAL_BOUNDED_CACHE_NAMES, InfinispanConnectionProvider.CLUSTERED_BOUNDED_CACHE_NAMES)
+        Set<String> maxCountCaches = Stream.of(CachingOptions.LOCAL_MAX_COUNT_CACHES, CachingOptions.CLUSTERED_MAX_COUNT_CACHES)
               .flatMap(Arrays::stream)
               .collect(Collectors.toSet());
 
