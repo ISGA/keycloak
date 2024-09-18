@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta name="robots" content="noindex, nofollow">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light${(properties.darkModeSwitchEnabled)?boolean?then(' dark', '')}">
+    <meta name="color-scheme" content="light${(properties.darkModeEnabled)?boolean?then(' dark', '')}">
     <title>Welcome to ${productName}</title>
-    <#if properties.darkModeSwitchEnabled?boolean>
+    <#if properties.darkModeEnabled?boolean>
       <script type="module" async blocking="render">
           const DARK_MODE_CLASS = "pf-v5-theme-dark";
           const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");

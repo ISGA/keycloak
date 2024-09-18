@@ -28,7 +28,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="robots" content="noindex, nofollow">
-    <meta name="color-scheme" content="light${(properties.kcDarkModeSwitchEnabled)?boolean?then(' dark', '')}">
+    <meta name="color-scheme" content="light${(properties.darkModeEnabled)?boolean?then(' dark', '')}">
 
     <#if properties.meta?has_content>
         <#list properties.meta?split(' ') as meta>
@@ -36,7 +36,7 @@
         </#list>
     </#if>
     <title>${msg("loginTitle",(realm.displayName!''))}</title>
-    <#if properties.kcDarkModeSwitchEnabled?boolean>
+    <#if properties.darkModeEnabled?boolean>
       <script type="module" async blocking="render">
           const DARK_MODE_CLASS = "pf-v5-theme-dark";
           const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
