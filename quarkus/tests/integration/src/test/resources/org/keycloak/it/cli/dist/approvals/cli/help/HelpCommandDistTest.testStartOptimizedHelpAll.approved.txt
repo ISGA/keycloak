@@ -26,12 +26,6 @@ Cache:
 --cache-config-file <file>
                      Defines the file from which cache configuration should be loaded from. The
                        configuration file is relative to the 'conf/' directory.
---cache-embedded-action-tokens-max-count <max-count>
-                     The maximum number of entries that can be stored in-memory by the actionTokens
-                       cache.
---cache-embedded-authentication-sessions-max-count <max-count>
-                     The maximum number of entries that can be stored in-memory by the
-                       authenticationSessions cache.
 --cache-embedded-authorization-max-count <max-count>
                      The maximum number of entries that can be stored in-memory by the
                        authorization cache.
@@ -40,9 +34,6 @@ Cache:
                        clientSessions cache.
 --cache-embedded-keys-max-count <max-count>
                      The maximum number of entries that can be stored in-memory by the keys cache.
---cache-embedded-login-failures-max-count <max-count>
-                     The maximum number of entries that can be stored in-memory by the
-                       loginFailures cache.
 --cache-embedded-mtls-enabled <true|false>
                      Encrypts the network communication between Keycloak servers. Default: false.
 --cache-embedded-mtls-key-store-file <file>
