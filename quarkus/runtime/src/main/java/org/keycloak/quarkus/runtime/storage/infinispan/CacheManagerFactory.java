@@ -507,15 +507,11 @@ public class CacheManagerFactory {
         Stream.of(InfinispanConnectionProvider.LOCAL_BOUNDED_CACHE_NAMES, InfinispanConnectionProvider.CLUSTERED_BOUNDED_CACHE_NAMES)
               .flatMap(Arrays::stream)
               .forEach(cache -> {
+                  var memoryConfig = holder.getNamedConfigurationBuilders().get(cache).memory();
                   String propKey = CachingOptions.cacheMaxCountProperty(cache);
-                  Optional<String> prop = Configuration.getOptionalKcValue(propKey);
-                  if (prop.isPresent()) {
-                      int maxCount = Integer.parseInt(prop.get());
-                      holder.getNamedConfigurationBuilders()
-                            .get(cache)
-                            .memory()
-                            .maxCount(maxCount);
-                  }
+                  Configuration.getOptionalKcValue(propKey)
+                          .map(Integer::parseInt)
+                          .ifPresent(memoryConfig::maxCount);
               });
     }
 
