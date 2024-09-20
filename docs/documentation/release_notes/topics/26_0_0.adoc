@@ -217,3 +217,14 @@ The following event types are now deprecated and will be removed in a future ver
 = Lightweight access tokens for Admin REST API
 
 Lightweight access tokens can now be used on the admin REST API. The `security-admin-console` and `admin-cli` clients are now using lightweight access tokens by default, so “Always Use Lightweight Access Token” and “Full Scope Allowed” are now enabled on these two clients. However, the behavior in the admin console should effectively remain the same. Be cautious if you have made changes to these two clients and if you are using them for other purposes.
+
+= Dark mode enabled for all `keycloak` themes
+
+We've now enabled dark mode support for all the `keycloak` themes. This feature was previously only present in the admin console, but is now also available for the account console, login and welcome page. If a user indicates their preference through an operating system setting (e.g. light or dark mode) or a user agent setting, the theme will automatically follow these preferences.
+
+If you are using a custom theme that extends any of the `keycloak` themes and are not yet ready to support dark mode, or have styling conflicts that prevent you from implementing dark mode, you can disable support by adding the following property to your theme:
+
+[source,properties]
+----
+darkModeEnabled=false
+----

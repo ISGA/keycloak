@@ -28,6 +28,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="robots" content="noindex, nofollow">
+    <meta name="color-scheme" content="light${(properties.darkModeEnabled)?boolean?then(' dark', '')}">
 
     <#if properties.meta?has_content>
         <#list properties.meta?split(' ') as meta>
@@ -35,6 +36,25 @@
         </#list>
     </#if>
     <title>${msg("loginTitle",(realm.displayName!''))}</title>
+    <#if properties.darkModeEnabled?boolean>
+      <script type="module" async blocking="render">
+          const DARK_MODE_CLASS = "pf-v5-theme-dark";
+          const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+          updateDarkMode(mediaQuery.matches);
+          mediaQuery.addEventListener("change", (event) => updateDarkMode(event.matches));
+
+          function updateDarkMode(isEnabled) {
+            const { classList } = document.documentElement;
+
+            if (isEnabled) {
+              classList.add(DARK_MODE_CLASS);
+            } else {
+              classList.remove(DARK_MODE_CLASS);
+            }
+          }
+      </script>
+    </#if>
     <link rel="icon" href="${url.resourcesPath}/img/favicon.ico" />
     <#if properties.stylesCommon?has_content>
         <#list properties.stylesCommon?split(' ') as style>
@@ -70,21 +90,6 @@
         checkCookiesAndSetTimer(
             "${url.ssoLoginInOtherTabsUrl?no_esc}"
         );
-
-        const DARK_MODE_CLASS = "pf-v5-theme-dark";
-        const mediaQuery =window.matchMedia("(prefers-color-scheme: dark)");
-        updateDarkMode(mediaQuery.matches);
-        mediaQuery.addEventListener("change", (event) =>
-          updateDarkMode(event.matches),
-        );
-        function updateDarkMode(isEnabled) {
-          const { classList } = document.documentElement;
-          if (isEnabled) {
-            classList.add(DARK_MODE_CLASS);
-          } else {
-            classList.remove(DARK_MODE_CLASS);
-          }
-        }
     </script>
 </head>
 
