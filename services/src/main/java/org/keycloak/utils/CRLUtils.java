@@ -93,8 +93,8 @@ public final class CRLUtils {
             throw new GeneralSecurityException("Truststore not available");
         }
 
-        Map<X500Principal, X509Certificate> rootCerts = truststoreProvider.getRootCertificates();
-        Map<X500Principal, X509Certificate> intermediateCerts = truststoreProvider.getIntermediateCertificates();
+        Map<String, X509Certificate> rootCerts = truststoreProvider.getRootCertificates();
+        Map<String, X509Certificate> intermediateCerts = truststoreProvider.getIntermediateCertificates();
 
         X509Certificate crlSignatureCertificate = intermediateCerts.get(crlIssuerPrincipal);
         if (crlSignatureCertificate == null) {

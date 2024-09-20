@@ -33,10 +33,10 @@ public class FileTruststoreProvider implements TruststoreProvider {
     private final HostnameVerificationPolicy policy;
     private final SSLSocketFactory sslSocketFactory;
     private final KeyStore truststore;
-    private final Map<X500Principal, X509Certificate> rootCertificates;
-    private final Map<X500Principal, X509Certificate> intermediateCertificates;
+    private final Map<String, X509Certificate> rootCertificates;
+    private final Map<String, X509Certificate> intermediateCertificates;
 
-    public FileTruststoreProvider(KeyStore truststore, HostnameVerificationPolicy policy, Map<X500Principal, X509Certificate> rootCertificates, Map<X500Principal, X509Certificate> intermediateCertificates) {
+    public FileTruststoreProvider(KeyStore truststore, HostnameVerificationPolicy policy, Map<String, X509Certificate> rootCertificates, Map<String, X509Certificate> intermediateCertificates) {
         this.policy = policy;
         this.truststore = truststore;
         this.rootCertificates = rootCertificates;
@@ -62,12 +62,12 @@ public class FileTruststoreProvider implements TruststoreProvider {
     }
 
     @Override
-    public Map<X500Principal, X509Certificate> getRootCertificates() {
+    public Map<String, X509Certificate> getRootCertificates() {
         return rootCertificates;
     }
 
     @Override
-    public Map<X500Principal, X509Certificate> getIntermediateCertificates() {
+    public Map<String, X509Certificate> getIntermediateCertificates() {
         return intermediateCertificates;
     }
 

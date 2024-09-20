@@ -176,8 +176,8 @@ public class FileTruststoreProviderFactory implements TruststoreProviderFactory 
 
     private static class TruststoreCertificatesLoader {
 
-        private Map<X500Principal, X509Certificate> trustedRootCerts = new HashMap<>();
-        private Map<X500Principal, X509Certificate> intermediateCerts = new HashMap<>();
+        private Map<String, X509Certificate> trustedRootCerts = new HashMap<>();
+        private Map<String, X509Certificate> intermediateCerts = new HashMap<>();
 
 
         public TruststoreCertificatesLoader(KeyStore truststore) {
@@ -213,11 +213,11 @@ public class FileTruststoreProviderFactory implements TruststoreProviderFactory 
                     X509Certificate cax509cert = (X509Certificate) certificate;
                     if (isSelfSigned(cax509cert)) {
                         X500Principal principal = cax509cert.getSubjectX500Principal();
-                        trustedRootCerts.put(principal, cax509cert);
+                        trustedRootCerts.put(alias, cax509cert);
                         log.debug("Trusted root CA found in truststore : alias : " + alias + " | Subject DN : " + principal);
                     } else {
                         X500Principal principal = cax509cert.getSubjectX500Principal();
-                        intermediateCerts.put(principal, cax509cert);
+                        intermediateCerts.put(alias, cax509cert);
                         log.debug("Intermediate CA found in truststore : alias : " + alias + " | Subject DN : " + principal);
                     }
                 } else

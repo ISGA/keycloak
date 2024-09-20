@@ -40,10 +40,10 @@ public interface TruststoreProvider extends Provider {
     /**
      * @return root certificates from the configured truststore as a map where the key is the X500Principal of the corresponding X509Certificate
      */
-    Map<X500Principal, X509Certificate> getRootCertificates();
+    Map<String, X509Certificate> getRootCertificates();
 
     /**
      * @return intermediate certificates from the configured truststore as a map where the key is the X500Principal of the corresponding X509Certificate
      */
-    Map<X500Principal, X509Certificate> getIntermediateCertificates();
+    Map<String, X509Certificate> getIntermediateCertificates();
 }
