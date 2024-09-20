@@ -814,7 +814,7 @@ public class SAMLEndpoint {
 
         private String getExpectedDestination(String providerAlias, String clientId) {
             if(clientId != null) {
-                return session.getContext().getUri().getAbsolutePath().toString();
+                return Urls.identityProviderAuthnResponse(session.getContext().getUri().getBaseUri(), providerAlias, realm.getName()).toString()+"/clients/"+clientId;
             }
             return Urls.identityProviderAuthnResponse(session.getContext().getUri().getBaseUri(), providerAlias, realm.getName()).toString();
         }
