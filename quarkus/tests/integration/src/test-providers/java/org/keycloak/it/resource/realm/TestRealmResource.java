@@ -23,6 +23,7 @@ import org.infinispan.commons.io.StringBuilderWriter;
 import org.infinispan.configuration.parsing.ParserRegistry;
 import org.jboss.logging.Logger;
 import org.keycloak.connections.infinispan.InfinispanConnectionProvider;
+import org.keycloak.models.KeycloakSession;
 import org.keycloak.services.resource.RealmResourceProvider;
 
 import jakarta.ws.rs.GET;
@@ -40,8 +41,8 @@ public class TestRealmResource implements RealmResourceProvider {
 
     final InfinispanConnectionProvider infinispanConnectionProvider;
 
-    public TestRealmResource(InfinispanConnectionProvider infinispanConnectionProvider) {
-        this.infinispanConnectionProvider = infinispanConnectionProvider;
+    public TestRealmResource(KeycloakSession session) {
+        this.infinispanConnectionProvider = session.getProvider(InfinispanConnectionProvider.class);
     }
 
     @Override

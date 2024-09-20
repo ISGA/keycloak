@@ -18,7 +18,6 @@
 package org.keycloak.it.resource.realm;
 
 import org.keycloak.Config;
-import org.keycloak.connections.infinispan.InfinispanConnectionProvider;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.services.resource.RealmResourceProvider;
@@ -32,7 +31,7 @@ public class TestRealmResourceFactory implements RealmResourceProviderFactory {
 
     @Override
     public RealmResourceProvider create(KeycloakSession session) {
-        return new TestRealmResource(session.getProvider(InfinispanConnectionProvider.class));
+        return new TestRealmResource(session);
     }
 
     @Override

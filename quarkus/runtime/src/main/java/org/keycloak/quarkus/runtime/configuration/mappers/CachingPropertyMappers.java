@@ -88,10 +88,10 @@ final class CachingPropertyMappers {
         mappers.addAll(staticMappers);
 
         for (String cache : CachingOptions.LOCAL_MAX_COUNT_CACHES)
-            mappers.add(maxCountOpt(cache, () -> true));
+            mappers.add(maxCountOpt(cache, () -> true, ""));
 
         for (String cache : CachingOptions.CLUSTERED_MAX_COUNT_CACHES)
-            mappers.add(maxCountOpt(cache, InfinispanUtils::isEmbeddedInfinispan));
+            mappers.add(maxCountOpt(cache, InfinispanUtils::isEmbeddedInfinispan, "embedded Infinispan clusters configured"));
 
         return mappers.toArray(new PropertyMapper[0]);
     }
@@ -147,9 +147,9 @@ final class CachingPropertyMappers {
         return null;
     }
 
-    private static PropertyMapper<?> maxCountOpt(String cacheName, BooleanSupplier isEnabled) {
+    private static PropertyMapper<?> maxCountOpt(String cacheName, BooleanSupplier isEnabled, String enabledWhen) {
         return fromOption(CachingOptions.maxCountOption(cacheName))
-              .isEnabled(isEnabled)
+              .isEnabled(isEnabled, enabledWhen)
               .paramLabel("max-count")
               .build();
     }
