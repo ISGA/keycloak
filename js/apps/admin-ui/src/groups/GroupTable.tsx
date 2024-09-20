@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
 import { useAdminClient } from "../admin-client";
-import { ListEmptyState } from "@keycloak/keycloak-ui-shared";
+import { ListEmptyState, useFetch } from "@keycloak/keycloak-ui-shared";
 import { KeycloakDataTable } from "@keycloak/keycloak-ui-shared";
 import { useAccess } from "../context/access/Access";
 import useToggle from "../utils/useToggle";
@@ -32,6 +32,9 @@ export const GroupTable = ({ refresh: viewRefresh }: GroupTableProps) => {
 
   const [rename, setRename] = useState<GroupRepresentation>();
   const [isCreateModalOpen, toggleCreateOpen] = useToggle();
+  const [selectedDuplicateGroupId, setSelectedDuplicateGroupId] =
+    useState<string>();
+  const [duplicate, setDuplicate] = useState<GroupRepresentation>();
   const [showDelete, toggleShowDelete] = useToggle();
   const [move, setMove] = useState<GroupRepresentation>();
 
@@ -69,6 +72,37 @@ export const GroupTable = ({ refresh: viewRefresh }: GroupTableProps) => {
     return groupsData;
   };
 
+  useFetch(
+    async () => {
+      if (!selectedDuplicateGroupId) {
+        return;
+      }
+
+      return adminClient.groups
+        .findOne({ id: selectedDuplicateGroupId })
+        .then(async (group) => {
+          const subGroups = await adminClient.groups.listSubGroups({
+            parentId: selectedDuplicateGroupId,
+          });
+          const roleMappings = await adminClient.groups.listRoleMappings({
+            id: selectedDuplicateGroupId,
+          });
+
+          return {
+            group,
+            subGroups,
+            roleMappings,
+          };
+        });
+    },
+    (groupData) => {
+      if (groupData) {
+        setDuplicate(groupData.group);
+      }
+    },
+    [selectedDuplicateGroupId],
+  );
+
   return (
     <>
       <DeleteGroup
@@ -101,6 +135,17 @@ export const GroupTable = ({ refresh: viewRefresh }: GroupTableProps) => {
             refresh();
             viewRefresh();
           }}
+        />
+      )}
+      {duplicate && (
+        <GroupsModal
+          id={duplicate.id}
+          duplicate={duplicate}
+          refresh={() => {
+            refresh();
+            viewRefresh();
+          }}
+          handleModalToggle={() => setDuplicate(undefined)}
         />
       )}
       {move && (
@@ -172,6 +217,17 @@ export const GroupTable = ({ refresh: viewRefresh }: GroupTableProps) => {
                     return false;
                   },
                 },
+                ...(!id
+                  ? [
+                      {
+                        title: t("duplicate"),
+                        onRowClick: async (group: GroupRepresentation) => {
+                          setSelectedDuplicateGroupId(group.id!);
+                          return false;
+                        },
+                      },
+                    ]
+                  : []),
                 {
                   isSeparator: true,
                 },
