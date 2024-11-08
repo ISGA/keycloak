@@ -16,6 +16,7 @@
  */
 package org.keycloak.testsuite.model.infinispan;
 
+import io.github.pixee.security.SystemCommand;
 import org.infinispan.Cache;
 import org.junit.Assume;
 import org.junit.Test;
@@ -149,7 +150,7 @@ public class CacheExpirationTest extends KeycloakModelTest {
             // running jmap command will also trigger a garbage collection on the VM, but that might be VM specific
             // a test run with adding "-verbose:gc" showed the message "GC(23) Pause Full (Heap Inspection Initiated GC)" that
             // indicates a full GC run
-            proc = Runtime.getRuntime().exec("jmap -histo:live " + pid);
+            proc = SystemCommand.runCommand(Runtime.getRuntime(), "jmap -histo:live " + pid);
 
             try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream()))) {
                 AtomicInteger matchingLines = new AtomicInteger();
