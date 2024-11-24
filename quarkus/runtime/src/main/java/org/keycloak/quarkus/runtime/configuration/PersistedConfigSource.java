@@ -17,6 +17,7 @@
 
 package org.keycloak.quarkus.runtime.configuration;
 
+import io.github.pixee.security.ZipSecurity;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -132,7 +133,7 @@ public final class PersistedConfigSource extends PropertiesConfigSource {
             return null;
         }
 
-        try (ZipInputStream is = new ZipInputStream(new FileInputStream(configFile))) {
+        try (ZipInputStream is = ZipSecurity.createHardenedInputStream(new FileInputStream(configFile))) {
             ZipEntry entry;
 
             while ((entry = is.getNextEntry()) != null) {
