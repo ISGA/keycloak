@@ -52,7 +52,10 @@
       "moment-timezone",
       "patternfly-bootstrap-combobox",
       "patternfly-bootstrap-treeview"
-    ]
+    ],
+    "overrides": {
+      "rollup@<=4.22.4": "4.22.4"
+    }
   },
   "lint-staged": {
     "*.{js,jsx,mjs,ts,tsx}": "eslint --cache --fix"
