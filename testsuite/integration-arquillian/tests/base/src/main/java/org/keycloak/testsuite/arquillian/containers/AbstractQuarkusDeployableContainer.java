@@ -17,6 +17,8 @@
 
 package org.keycloak.testsuite.arquillian.containers;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -309,7 +311,7 @@ public abstract class AbstractQuarkusDeployableContainer implements DeployableCo
         SuiteContext suiteContext = this.suiteContext.get();
         //TODO: not sure if the best endpoint but it makes sure that everything is properly initialized. Once we have
         // support for MP Health this should change
-        URL contextRoot = new URL(getBaseUrl(suiteContext) + "/auth/realms/master/");
+        URL contextRoot = Urls.create(getBaseUrl(suiteContext) + "/auth/realms/master/", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         HttpURLConnection connection;
         long startTime = System.currentTimeMillis();
 
@@ -355,9 +357,9 @@ public abstract class AbstractQuarkusDeployableContainer implements DeployableCo
 
         // might be running behind a load balancer
         if ("https".equals(baseUrl.getProtocol())) {
-            baseUrl = new URL(baseUrl.toString().replace(String.valueOf(baseUrl.getPort()), String.valueOf(configuration.getBindHttpsPort())));
+            baseUrl = Urls.create(baseUrl.toString().replace(String.valueOf(baseUrl.getPort()), String.valueOf(configuration.getBindHttpsPort())), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } else {
-            baseUrl = new URL(baseUrl.toString().replace(String.valueOf(baseUrl.getPort()), String.valueOf(configuration.getBindHttpPort())));
+            baseUrl = Urls.create(baseUrl.toString().replace(String.valueOf(baseUrl.getPort()), String.valueOf(configuration.getBindHttpPort())), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         }
         return baseUrl;
     }

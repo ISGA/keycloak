@@ -19,6 +19,8 @@ package org.keycloak.testsuite.oauth;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -243,7 +245,7 @@ public class OAuthRedirectUriTest extends AbstractKeycloakTest {
         OAuthClient.AuthorizationEndpointResponse response = oauth.doLogin("test-user@localhost", "password");
 
         Assert.assertNotNull(response.getCode());
-        URL url = new URL(driver.getCurrentUrl());
+        URL url = Urls.create(driver.getCurrentUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         Assert.assertTrue(url.toString().startsWith(APP_ROOT));
         Assert.assertTrue(url.getQuery().contains("code="));
         Assert.assertTrue(url.getQuery().contains("state="));
@@ -264,7 +266,7 @@ public class OAuthRedirectUriTest extends AbstractKeycloakTest {
         OAuthClient.AuthorizationEndpointResponse response = oauth.doLogin("test-user@localhost", "password");
 
         Assert.assertNotNull(response.getCode());
-        URL url = new URL(driver.getCurrentUrl());
+        URL url = Urls.create(driver.getCurrentUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         Assert.assertTrue(url.toString().startsWith(APP_ROOT));
         Assert.assertTrue(url.getQuery().contains("key=value"));
         Assert.assertTrue(url.getQuery().contains("state="));
@@ -280,7 +282,7 @@ public class OAuthRedirectUriTest extends AbstractKeycloakTest {
         OAuthClient.AuthorizationEndpointResponse response = oauth.doLogin("test-user@localhost", "password");
 
         Assert.assertNotNull(response.getCode());
-        URL url = new URL(driver.getCurrentUrl());
+        URL url = Urls.create(driver.getCurrentUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         Assert.assertTrue(url.toString().startsWith(APP_ROOT));
         Assert.assertTrue(url.toString().contains("key=value"));
     }

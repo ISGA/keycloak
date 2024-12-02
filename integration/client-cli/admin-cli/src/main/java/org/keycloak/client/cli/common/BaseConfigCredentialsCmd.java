@@ -16,6 +16,8 @@
  */
 package org.keycloak.client.cli.common;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.client.cli.config.ConfigData;
 import org.keycloak.client.cli.config.RealmConfigData;
@@ -83,7 +85,7 @@ public class BaseConfigCredentialsCmd extends BaseAuthOptionsCmd {
         }
 
         try {
-            new URL(server);
+            Urls.create(server, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (Exception e) {
             throw new RuntimeException("Invalid server endpoint url: " + server, e);
         }

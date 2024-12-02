@@ -17,6 +17,8 @@
 
 package org.keycloak.testsuite.arquillian;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.File;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -108,7 +110,7 @@ public class AppServerTestEnricher {
     }
 
     public static String getAppServerBrowserContextRoot() throws MalformedURLException {
-        return getAppServerBrowserContextRoot(new URL(getAuthServerContextRoot()));
+        return getAppServerBrowserContextRoot(Urls.create(getAuthServerContextRoot(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS));
     }
 
     public static String getAppServerBrowserContextRoot(URL contextRoot) {
@@ -162,12 +164,12 @@ public class AppServerTestEnricher {
     private ContainerInfo updateWithAppServerInfo(ContainerInfo appServerInfo, int clusterPortOffset) {
         try {
 
-            URL appServerContextRoot = new URL(isRelative()
+            URL appServerContextRoot = Urls.create(isRelative()
                     ? getAuthServerContextRoot(clusterPortOffset)
-                    : getAppServerContextRoot(clusterPortOffset));
+                    : getAppServerContextRoot(clusterPortOffset), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
             appServerInfo.setContextRoot(appServerContextRoot);
-            appServerInfo.setBrowserContextRoot(new URL(getAppServerBrowserContextRoot(appServerContextRoot)));
+            appServerInfo.setBrowserContextRoot(Urls.create(getAppServerBrowserContextRoot(appServerContextRoot), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS));
 
         } catch (MalformedURLException ex) {
             throw new IllegalArgumentException(ex);

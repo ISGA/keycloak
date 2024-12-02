@@ -17,6 +17,8 @@
 
 package org.keycloak.quarkus.runtime.configuration.mappers;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.keycloak.common.Profile;
 import org.keycloak.quarkus.runtime.Environment;
 import org.keycloak.quarkus.runtime.cli.PropertyException;
@@ -136,7 +138,7 @@ public class TracingPropertyMappers {
 
     private static boolean isValidUrl(String url) {
         try {
-            new URL(url).toURI();
+            Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).toURI();
             return true;
         } catch (MalformedURLException | URISyntaxException e) {
             return false;

@@ -19,6 +19,8 @@ package org.keycloak.operator.controllers;
 import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
 import io.fabric8.kubernetes.api.model.networking.v1.IngressBuilder;
 import io.fabric8.kubernetes.client.KubernetesClientException;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import io.javaoperatorsdk.operator.api.reconciler.Context;
 import io.javaoperatorsdk.operator.api.reconciler.dependent.DependentResource;
 import io.javaoperatorsdk.operator.processing.dependent.kubernetes.CRUDKubernetesDependentResource;
@@ -147,7 +149,7 @@ public class KeycloakIngressDependentResource extends CRUDKubernetesDependentRes
             String hostname = hostnameSpec.getHostname();
 
             try {
-                hostname = new URL(hostname).getHost();
+                hostname = Urls.create(hostname, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getHost();
                 Log.debug("Hostname is a URL, extracting host: " + hostname);
             }
             catch (MalformedURLException e) {

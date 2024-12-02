@@ -1,5 +1,7 @@
 package org.keycloak.documentation.test.utils;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.commons.io.FileUtils;
 import org.keycloak.documentation.test.Config;
 import org.keycloak.documentation.test.Guide;
@@ -88,7 +90,7 @@ public class LinkUtils {
                         invalidLinks.add(new InvalidLink(link, error));
                     }
                 } else if (link.startsWith("file")) {
-                    File f = new File(new URL(link).getFile());
+                    File f = new File(Urls.create(link, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getFile());
                     if (!f.isFile()) {
                         invalidLinks.add(new InvalidLink(link, "local guide not found"));
                     } else {

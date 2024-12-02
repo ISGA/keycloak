@@ -39,6 +39,8 @@ import io.fabric8.kubernetes.client.dsl.Loggable;
 import io.fabric8.kubernetes.client.dsl.PodResource;
 import io.fabric8.kubernetes.client.dsl.Resource;
 import io.fabric8.kubernetes.client.utils.Serialization;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import io.javaoperatorsdk.operator.Operator;
 import io.javaoperatorsdk.operator.api.config.BaseConfigurationService;
 import io.javaoperatorsdk.operator.api.config.ControllerConfiguration;
@@ -136,7 +138,7 @@ public class BaseOperatorTest implements QuarkusTestAfterEachCallback {
     createK8sClient();
     kubernetesIp = ConfigProvider.getConfig().getOptionalValue(OPERATOR_KUBERNETES_IP, String.class).orElseGet(() -> {
         try {
-            return new URL(k8sclient.getConfiguration().getMasterUrl()).getHost();
+            return Urls.create(k8sclient.getConfiguration().getMasterUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getHost();
         } catch (MalformedURLException e) {
             return "localhost";
         }

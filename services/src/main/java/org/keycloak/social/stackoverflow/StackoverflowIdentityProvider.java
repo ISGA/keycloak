@@ -17,6 +17,8 @@
 package org.keycloak.social.stackoverflow;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.jboss.logging.Logger;
 import org.keycloak.broker.oidc.AbstractOAuth2IdentityProvider;
 import org.keycloak.broker.oidc.mappers.AbstractJsonUserAttributeMapper;
@@ -110,7 +112,7 @@ public class StackoverflowIdentityProvider extends AbstractOAuth2IdentityProvide
 
 			try {
 				log.debug("go to extract username from profile URL " + profileURL);
-				URL u = new URL(profileURL);
+				URL u = Urls.create(profileURL, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 				String path = u.getPath();
 				if (isNotBlank(path) && path.length() > 1) {
 					if (path.startsWith("/")) {

@@ -16,6 +16,8 @@
  */
 package org.keycloak.testsuite.utils.undertow;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import io.undertow.UndertowMessages;
 import io.undertow.jsp.HackInstanceManager;
 import io.undertow.jsp.JspServletBuilder;
@@ -112,9 +114,9 @@ public class UndertowDeployerHelper {
                     log.warnf("Application '%s' did not found resource on path %s", archive.getName(), path);
                     return null;
                 } else {
-                    URL contextUrl = new URL(appServerRoot);
+                    URL contextUrl = Urls.create(appServerRoot, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
-                    URL myResourceUrl = new URL(contextUrl.getProtocol(), contextUrl.getHost(), contextUrl.getPort(), path, new URLStreamHandler() {
+                    URL myResourceUrl = Urls.create(contextUrl.getProtocol(), contextUrl.getHost(), contextUrl.getPort(), path, new URLStreamHandler() {
 
                         @Override
                         protected URLConnection openConnection(URL u) throws IOException {
@@ -132,7 +134,7 @@ public class UndertowDeployerHelper {
                             };
                         }
 
-                    });
+                    }, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
                     return new URLResource(myResourceUrl, path);
                 }
