@@ -260,7 +260,8 @@
         <auth.server.supported.keystore.types>JKS,PKCS12,BCFKS</auth.server.supported.keystore.types>
         <auth.server.supported.rsa.key.sizes>1024,2048,4096</auth.server.supported.rsa.key.sizes>
         <auth.server.kerberos.supported>true</auth.server.kerberos.supported>
-    </properties>
+  <versions.java-security-toolkit>1.2.0</versions.java-security-toolkit>
+ </properties>
 
     <build>
         <pluginManagement>
@@ -1941,5 +1942,13 @@
         </profile>
         
     </profiles>
-
+ <dependencyManagement>
+  <dependencies>
+   <dependency>
+    <groupId>io.github.pixee</groupId>
+    <artifactId>java-security-toolkit</artifactId>
+    <version>${versions.java-security-toolkit}</version>
+   </dependency>
+  </dependencies>
+ </dependencyManagement>
 </project>

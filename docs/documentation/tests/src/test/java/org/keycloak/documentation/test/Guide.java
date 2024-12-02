@@ -1,5 +1,7 @@
 package org.keycloak.documentation.test;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.keycloak.documentation.test.utils.DocUtils;
 
 import java.io.File;
@@ -32,7 +34,7 @@ public class Guide {
                 File htmlFile = config.getGuideHtmlFile(guide);
                 body = utils.readBody(htmlFile);
             } else {
-                body = utils.readBody(new URL(guideUrl));
+                body = utils.readBody(Urls.create(guideUrl, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS));
             }
 
             body = rewriteLinksToGuides(config, body);

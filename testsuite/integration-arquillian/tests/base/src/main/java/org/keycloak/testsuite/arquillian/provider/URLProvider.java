@@ -17,6 +17,8 @@
 
 package org.keycloak.testsuite.arquillian.provider;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.http.client.utils.URIBuilder;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.impl.enricher.resource.URLResourceProvider;
@@ -62,7 +64,7 @@ public class URLProvider extends URLResourceProvider {
             try {
                 for (Annotation a : qualifiers) {
                     if (OperateOnDeployment.class.isAssignableFrom(a.annotationType())) {
-                        return new URL(appServerContextRoot + "/" + ((OperateOnDeployment) a).value() + "/");
+                        return Urls.create(appServerContextRoot + "/" + ((OperateOnDeployment) a).value() + "/", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
                     }
                 }
             } catch (MalformedURLException ex) {

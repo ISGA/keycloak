@@ -17,6 +17,8 @@
 
 package org.keycloak.common.util;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -112,7 +114,7 @@ public class UriUtils {
         URL parsed;
 
         try {
-            parsed = new URL(url);
+            parsed = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException("The url [" + name + "] is malformed", e);
         }

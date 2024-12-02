@@ -17,6 +17,8 @@
 
 package org.keycloak.services.clientregistration.policy.impl;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -231,7 +233,7 @@ public class TrustedHostClientRegistrationPolicy implements ClientRegistrationPo
 
     protected void checkURLTrusted(String url, List<String> trustedHosts, List<String> trustedDomains) throws ClientRegistrationPolicyException {
         try {
-            String host = new URL(url).getHost();
+            String host = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getHost();
 
             if (checkHostTrusted(host, trustedHosts, trustedDomains)) {
                 return;

@@ -17,6 +17,8 @@
 
 package org.keycloak.it.utils;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -341,7 +343,7 @@ public final class RawKeycloakDistribution implements KeycloakDistribution {
     }
 
     private void waitForReadiness(String scheme, int port) throws MalformedURLException {
-        URL contextRoot = new URL(scheme + "://localhost:" + port + ("/" + relativePath + "/realms/master/").replace("//", "/"));
+        URL contextRoot = Urls.create(scheme + "://localhost:" + port + ("/" + relativePath + "/realms/master/").replace("//", "/"), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         HttpURLConnection connection = null;
         long startTime = System.currentTimeMillis();
         Exception ex = null;

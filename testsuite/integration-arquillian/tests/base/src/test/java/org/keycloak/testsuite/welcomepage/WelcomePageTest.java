@@ -17,6 +17,8 @@
 
 package org.keycloak.testsuite.welcomepage;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.hamcrest.Matchers;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
@@ -115,7 +117,7 @@ public class WelcomePageTest extends AbstractKeycloakTest {
         if (floatingIp == null) {
             throw new RuntimeException("Could not determine floating IP address.");
         }
-        return new URL("http", floatingIp, welcomePage.getInjectedUrl().getPort(), "");
+        return Urls.create("http", floatingIp, welcomePage.getInjectedUrl().getPort(), "", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
     }
 
     @Test

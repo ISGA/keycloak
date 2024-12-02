@@ -17,6 +17,8 @@
 
 package org.keycloak.testsuite.adapter.page;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.net.MalformedURLException;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -37,7 +39,7 @@ public class MultiTenant2Saml extends SAMLServlet {
     @Override
     public URL getInjectedUrl() {
         try {
-            return new URL(url + "?realm=tenant2");
+            return Urls.create(url + "?realm=tenant2", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (MalformedURLException e) {
             throw new IllegalStateException(e);
         }
