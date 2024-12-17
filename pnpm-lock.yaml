@@ -166,8 +166,8 @@ importers:
         specifier: ^5.4.0
         version: 5.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@patternfly/react-styles':
-        specifier: ^5.4.0
-        version: 5.4.0
+        specifier: ^6.1.0
+        version: 6.1.0
       '@patternfly/react-table':
         specifier: ^5.4.0
         version: 5.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -424,8 +424,8 @@ importers:
         specifier: ^5.4.0
         version: 5.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@patternfly/react-styles':
-        specifier: ^5.4.0
-        version: 5.4.0
+        specifier: ^6.1.0
+        version: 6.1.0
       '@patternfly/react-table':
         specifier: ^5.4.0
         version: 5.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1186,6 +1186,9 @@ packages:
 
   '@patternfly/react-styles@5.4.0':
     resolution: {integrity: sha512-4ZE0s6LkX/0KsN0FOeogrDoj18m+BPA73YKnabZGB4SDRzrBNeBh2a6bSt546ZseEjkoJ+S81kOG0G8YckPQYg==}
+
+  '@patternfly/react-styles@6.1.0':
+    resolution: {integrity: sha512-JQ3zIl5SFiSB0YWVYibcUwgZdsp6Wn8hkfZ7KhtCjHFccSDdJexPOXVV1O9f2h4PfxTlY3YntZ81ZsguBx/Q7A==}
 
   '@patternfly/react-table@5.4.0':
     resolution: {integrity: sha512-HkXxVEPeI6nRVSUSHb5BungF41IfjB8W2VqaA3SX+6fGxQAW0e/Hb58ctUdPR2VJ/S2YZFcIcqCCWQtQEf+xKA==}
@@ -5590,7 +5593,7 @@ snapshots:
       '@patternfly/react-code-editor': 5.4.1(monaco-editor@0.52.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@patternfly/react-core': 5.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@patternfly/react-icons': 5.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@patternfly/react-styles': 5.4.0
+      '@patternfly/react-styles': 6.1.0
       '@patternfly/react-table': 5.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       dagre: 0.8.5
       file-saver: 2.0.5
@@ -5780,6 +5783,8 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
 
   '@patternfly/react-styles@5.4.0': {}
+
+  '@patternfly/react-styles@6.1.0': {}
 
   '@patternfly/react-table@5.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
