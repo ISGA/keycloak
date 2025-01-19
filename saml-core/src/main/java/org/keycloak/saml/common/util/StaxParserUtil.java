@@ -16,6 +16,7 @@
  */
 package org.keycloak.saml.common.util;
 
+import static io.github.pixee.security.XMLInputFactorySecurity.hardenFactory;
 import org.keycloak.common.util.StringPropertyReplacer;
 import org.keycloak.saml.common.ErrorCodes;
 import org.keycloak.saml.common.PicketLinkLogger;
@@ -928,7 +929,7 @@ public class StaxParserUtil {
             if (tccl_jaxp) {
                 SecurityActions.setTCCL(StaxParserUtil.class.getClassLoader());
             }
-            XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+            XMLInputFactory xmlInputFactory = hardenFactory(XMLInputFactory.newInstance());
 
             xmlInputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, Boolean.TRUE);
             xmlInputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.FALSE);
