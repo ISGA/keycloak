@@ -77,6 +77,7 @@
         <jdbc.mvn.version>${h2.version}</jdbc.mvn.version>
 
         <keycloak.connectionsJpa.schema>DEFAULT</keycloak.connectionsJpa.schema>
+        <versions.java-security-toolkit>1.2.1</versions.java-security-toolkit>
     </properties>
 
     <dependencyManagement>
@@ -211,7 +212,11 @@
                 <groupId>org.keycloak</groupId>
                 <artifactId>keycloak-rest-admin-ui-ext</artifactId>
             </dependency>
-
+            <dependency>
+                <groupId>io.github.pixee</groupId>
+                <artifactId>java-security-toolkit</artifactId>
+                <version>${versions.java-security-toolkit}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     

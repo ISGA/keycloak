@@ -1,5 +1,6 @@
 package org.keycloak.testsuite.cli.exec;
 
+import io.github.pixee.security.SystemCommand;
 import org.keycloak.client.cli.util.OsUtil;
 import org.keycloak.testsuite.cli.OsArch;
 import org.keycloak.testsuite.cli.OsUtils;
@@ -87,11 +88,11 @@ public abstract class AbstractExec {
             if (OS_ARCH.isWindows()) {
                 String cmd = (env != null ? "set " + env + " & " : "") + fixPath(getCmd()) + " " + fixQuotes(argsLine);
                 System.out.println("Executing: cmd.exe /c " + cmd);
-                process = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/c", cmd}, null, new File(workDir));
+                process = SystemCommand.runCommand(Runtime.getRuntime(), new String[]{"cmd.exe", "/c", cmd}, null, new File(workDir));
             } else {
                 String cmd = (env != null ? env + " " : "") + getCmd() + " " + argsLine;
                 System.out.println("Executing: sh -c " + cmd);
-                process = Runtime.getRuntime().exec(new String[]{"sh", "-c", cmd}, null, new File(workDir));
+                process = SystemCommand.runCommand(Runtime.getRuntime(), new String[]{"sh", "-c", cmd}, null, new File(workDir));
             }
 
             stdoutRunner = new StreamReaderThread(process.getInputStream(), logStreams ? new LoggingOutputStream("STDOUT", stdout) : stdout);
