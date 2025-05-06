@@ -64,7 +64,7 @@ async function startServer() {
       ...keycloakArgs,
     ],
     {
-      shell: true,
+      shell: false,
       env,
     },
   );
