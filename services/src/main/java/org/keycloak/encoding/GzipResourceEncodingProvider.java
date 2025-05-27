@@ -49,10 +49,7 @@ public class GzipResourceEncodingProvider implements ResourceEncodingProvider {
                     if (!parent.isDirectory()) {
                         parent.mkdirs();
                     }
-                    File tmpEncodedFile = File.createTempFile(
-                            encodedFile.getName(),
-                            "tmp",
-                            parent);
+                    File tmpEncodedFile = Files.createTempFile(parent.toPath(), encodedFile.getName(), "tmp").toFile();
 
                     FileOutputStream fos = new FileOutputStream(tmpEncodedFile);
                     GZIPOutputStream gos = new GZIPOutputStream(fos);
