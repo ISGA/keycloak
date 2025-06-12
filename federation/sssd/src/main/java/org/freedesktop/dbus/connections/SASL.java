@@ -1,5 +1,6 @@
 package org.freedesktop.dbus.connections;
 
+import io.github.pixee.security.BoundedLineReader;
 import static org.freedesktop.dbus.connections.SASL.SaslCommand.AGREE_UNIX_FD;
 import static org.freedesktop.dbus.connections.SASL.SaslCommand.AUTH;
 import static org.freedesktop.dbus.connections.SASL.SaslCommand.BEGIN;
@@ -120,7 +121,7 @@ public class SASL {
             String lCookie = null;
 
             TimeMeasure tm = new TimeMeasure();
-            while (null != (s = r.readLine())) {
+            while (null != (s = BoundedLineReader.readLine(r, 5_000_000))) {
                 String[] line = s.split(" ");
                 long timestamp = Long.parseLong(line[1]);
                 if (line[0].equals(_id) && !(timestamp < 0 || (tm.getElapsedSeconds() + MAX_TIME_TRAVEL_SECONDS) < timestamp || tm.getElapsedSeconds() - EXPIRE_KEYS_TIMEOUT_SECONDS > timestamp)) {
@@ -174,7 +175,7 @@ public class SASL {
         if (cookiefile.exists()) {
             try (BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(cookiefile)))) {
                 String s = null;
-                while (null != (s = r.readLine())) {
+                while (null != (s = BoundedLineReader.readLine(r, 5_000_000))) {
                     String[] line = s.split(" ");
                     long time = Long.parseLong(line[1]);
                     // expire stale cookies

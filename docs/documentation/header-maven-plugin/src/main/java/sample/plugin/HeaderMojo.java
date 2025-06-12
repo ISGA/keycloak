@@ -16,6 +16,7 @@ package sample.plugin;
  * limitations under the License.
  */
 
+import io.github.pixee.security.BoundedLineReader;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -112,7 +113,7 @@ public class HeaderMojo extends AbstractMojo {
 
             String header = "\n\n:include_filename: " + filePath + "\ninclude::" + includeHeaderPath + "[]\n\n";
             try(PrintStream ps = new PrintStream(new FileOutputStream(out));BufferedReader br = new BufferedReader(new FileReader(f));){
-                for (String l = br.readLine(); l != null; l = br.readLine()) {
+                for (String l = BoundedLineReader.readLine(br, 5_000_000); l != null; l = BoundedLineReader.readLine(br, 5_000_000)) {
                     ps.println(l);
                     if (l.startsWith("=")) {
                         break;
@@ -120,7 +121,7 @@ public class HeaderMojo extends AbstractMojo {
                 }
                 ps.print(header);
 
-                for (String l = br.readLine(); l != null; l = br.readLine()) {
+                for (String l = BoundedLineReader.readLine(br, 5_000_000); l != null; l = BoundedLineReader.readLine(br, 5_000_000)) {
                     ps.println(l);
                 }
             }

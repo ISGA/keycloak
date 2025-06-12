@@ -1,5 +1,6 @@
 package org.keycloak.guides.maven;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -40,7 +41,7 @@ public class GuideParser {
     }
 
     private String getImportName(BufferedReader br) throws IOException {
-        for (String line = br.readLine(); line != null; line = br.readLine()) {
+        for (String line = BoundedLineReader.readLine(br, 5_000_000); line != null; line = BoundedLineReader.readLine(br, 5_000_000)) {
             Matcher templateImportMatcher = TEMPLATE_IMPORT_PATTERN.matcher(line);
             if (templateImportMatcher.matches()) {
                 return templateImportMatcher.group("importName");
@@ -51,12 +52,12 @@ public class GuideParser {
 
     private String getGuideElement(BufferedReader br, String importName) throws IOException {
         if (importName != null) {
-            for (String line = br.readLine(); line != null; line = br.readLine()) {
+            for (String line = BoundedLineReader.readLine(br, 5_000_000); line != null; line = BoundedLineReader.readLine(br, 5_000_000)) {
                 if (line.contains("<@" + importName + ".guide")) {
                     StringBuilder sb = new StringBuilder();
                     sb.append(line.trim());
                     while (!line.contains(">")) {
-                        line = br.readLine();
+                        line = BoundedLineReader.readLine(br, 5_000_000);
                         sb.append(" " + line.trim());
                     }
                     return sb.toString();

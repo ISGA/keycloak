@@ -17,6 +17,7 @@
 
 package org.keycloak.testsuite;
 
+import io.github.pixee.security.BoundedLineReader;
 import org.keycloak.models.utils.Base32;
 import org.keycloak.models.utils.TimeBasedOTP;
 
@@ -38,7 +39,7 @@ public class TotpGenerator {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         System.out.print("Insert secret: ");
-        for (String l = br.readLine(); true; l = br.readLine()) {
+        for (String l = BoundedLineReader.readLine(br, 5_000_000); true; l = BoundedLineReader.readLine(br, 5_000_000)) {
             if (task != null) {
                 task.cancel();
             }

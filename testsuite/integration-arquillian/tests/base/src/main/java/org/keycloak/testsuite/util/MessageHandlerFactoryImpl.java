@@ -1,5 +1,6 @@
 package org.keycloak.testsuite.util;
 
+import io.github.pixee.security.BoundedLineReader;
 import org.subethamail.smtp.MessageContext;
 import org.subethamail.smtp.MessageHandler;
 import org.subethamail.smtp.MessageHandlerFactory;
@@ -67,7 +68,7 @@ public class MessageHandlerFactoryImpl implements MessageHandlerFactory {
 
             String line = null;
             try {
-                while ((line = reader.readLine()) != null) {
+                while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                     sb.append(line + "\n");
                 }
             } catch (IOException e) {

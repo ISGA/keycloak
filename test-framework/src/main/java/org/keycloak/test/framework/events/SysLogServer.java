@@ -1,5 +1,6 @@
 package org.keycloak.test.framework.events;
 
+import io.github.pixee.security.BoundedLineReader;
 import org.jboss.logging.Logger;
 
 import java.io.BufferedReader;
@@ -69,7 +70,7 @@ public class SysLogServer {
                     startThread();
 
                     BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    for (String l = br.readLine(); l != null; l = br.readLine()) {
+                    for (String l = BoundedLineReader.readLine(br, 5_000_000); l != null; l = BoundedLineReader.readLine(br, 5_000_000)) {
                         try {
                             SysLog sysLog = SysLog.parse(l);
 // TODO This shows an issue when using embedded Keycloak server logging from the testsuite (client side) is also sent over syslog :/

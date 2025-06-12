@@ -1,5 +1,6 @@
 package org.keycloak.guides.maven;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -69,7 +70,7 @@ public class Context {
         Map<String, Integer> priorities = new HashMap<>();
         try (BufferedReader br = new BufferedReader(new FileReader(pinnedGuides))) {
             int c = 1;
-            for (String l = br.readLine(); l != null; l = br.readLine()) {
+            for (String l = BoundedLineReader.readLine(br, 5_000_000); l != null; l = BoundedLineReader.readLine(br, 5_000_000)) {
                 l = l.trim();
                 if (!l.isEmpty()) {
                     priorities.put(l, c);

@@ -1,5 +1,6 @@
 package org.keycloak.testsuite.rest.resource;
 
+import io.github.pixee.security.BoundedLineReader;
 import org.keycloak.headers.SecurityHeadersProvider;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.testsuite.rest.TestingResourceProvider;
@@ -66,11 +67,11 @@ public class TestJavascriptResource {
     private String resourceToString(String path) throws IOException {
         try (InputStream is = TestingResourceProvider.class.getResourceAsStream(path);
              BufferedReader buf = new BufferedReader(new InputStreamReader(is))) {
-            String line = buf.readLine();
+            String line = BoundedLineReader.readLine(buf, 5_000_000);
             StringBuilder sb = new StringBuilder();
             while (line != null) {
                 sb.append(line).append("\n");
-                line = buf.readLine();
+                line = BoundedLineReader.readLine(buf, 5_000_000);
             }
 
             return sb.toString().replace("${js-adapter.auth-server-url}", getAuthServerContextRoot() + "/auth");

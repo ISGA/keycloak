@@ -16,6 +16,7 @@
  */
 package org.keycloak.testsuite.utils.io;
 
+import io.github.pixee.security.BoundedLineReader;
 import org.jboss.logging.Logger;
 import org.keycloak.representations.idm.RealmRepresentation;
 import org.keycloak.util.JsonSerialization;
@@ -341,7 +342,7 @@ public class IOUtil {
         System.out.println(builder);
         builder = new StringBuilder();
         while (reader.ready()) {
-            System.out.println(reader.readLine());
+            System.out.println(BoundedLineReader.readLine(reader, 5_000_000));
         }
         builder.append("</").append(type).append(">");
         System.out.println(builder);

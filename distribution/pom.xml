@@ -37,7 +37,7 @@
         <!-- Wildfly Community Related Properties -->
 
         <!-- EAP8 Related Properties -->
-
+        <versions.java-security-toolkit>1.2.1</versions.java-security-toolkit>
     </properties>
 
     <modules>
@@ -82,5 +82,13 @@
             </modules>
         </profile>
     </profiles>
-
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.pixee</groupId>
+                <artifactId>java-security-toolkit</artifactId>
+                <version>${versions.java-security-toolkit}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

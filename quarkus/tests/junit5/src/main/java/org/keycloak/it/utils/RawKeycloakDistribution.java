@@ -17,6 +17,7 @@
 
 package org.keycloak.it.utils;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -544,7 +545,7 @@ public final class RawKeycloakDistribution implements KeycloakDistribution {
     private static void readStream(BufferedReader reader, List<String> stream) throws IOException {
         String line;
 
-        while (reader.ready() && (line = reader.readLine()) != null) {
+        while (reader.ready() && (line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
             stream.add(line);
             System.out.println(line);
         }

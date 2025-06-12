@@ -1,5 +1,6 @@
 package org.keycloak.testsuite.arquillian.containers;
 
+import io.github.pixee.security.BoundedLineReader;
 import org.jboss.arquillian.container.spi.client.container.LifecycleException;
 import org.jboss.logging.Logger;
 import org.keycloak.testsuite.model.StoreProvider;
@@ -277,7 +278,7 @@ public class KeycloakQuarkusServerDeployableContainer extends AbstractQuarkusDep
         public void run() {
             String line;
             try {
-                while ((line = inputReader.readLine()) != null) {
+                while ((line = BoundedLineReader.readLine(inputReader, 5_000_000)) != null) {
                     System.out.println(line);
 
                     loggedLines.add(line);

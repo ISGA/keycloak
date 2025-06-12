@@ -1,5 +1,6 @@
 package org.freedesktop.dbus.utils;
 
+import io.github.pixee.security.BoundedLineReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -366,7 +367,7 @@ public final class Util {
             try (BufferedReader dis = new BufferedReader(new InputStreamReader(_input, _charset))) {
                 String s;
                 fileContent = new ArrayList<>();
-                while ((s = dis.readLine()) != null) {
+                while ((s = BoundedLineReader.readLine(dis, 5_000_000)) != null) {
                     fileContent.add(s);
                 }
             }

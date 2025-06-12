@@ -1,5 +1,6 @@
 package org.keycloak.testsuite.cli.exec;
 
+import io.github.pixee.security.BoundedLineReader;
 import org.keycloak.client.cli.util.OsUtil;
 import org.keycloak.testsuite.cli.OsArch;
 import org.keycloak.testsuite.cli.OsUtils;
@@ -201,7 +202,7 @@ public abstract class AbstractExec {
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 lines.add(line);
             }
             return lines;

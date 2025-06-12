@@ -17,6 +17,7 @@
 
 package org.keycloak.testsuite.util.cli;
 
+import io.github.pixee.security.BoundedLineReader;
 import org.jboss.logging.Logger;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.KeycloakSessionFactory;
@@ -101,7 +102,7 @@ public class TestsuiteCLI {
         String line;
         System.out.print("$ ");
         try {
-            while ((line = reader.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                 String[] splits = line.split(" ");
                 String commandName = splits[0];
                 Class<? extends AbstractCommand> commandClass = commands.get(commandName);
