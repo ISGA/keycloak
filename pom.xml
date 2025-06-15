@@ -160,7 +160,7 @@
         <postgresql.version>16</postgresql.version>
         <aurora-postgresql.version>16.1</aurora-postgresql.version>
         <aws-jdbc-wrapper.version>2.3.1</aws-jdbc-wrapper.version>
-        <postgresql-jdbc.version>42.7.4</postgresql-jdbc.version>
+        <postgresql-jdbc.version>42.7.7</postgresql-jdbc.version>
         <mariadb.version>10.11</mariadb.version>
         <mariadb-jdbc.version>3.4.1</mariadb-jdbc.version>
         <mssql.version>2022-latest</mssql.version>
@@ -278,7 +278,7 @@
         </developer>
     </developers>
 
-    <contributors></contributors>
+    <contributors/>
 
     <modules>
         <module>boms</module>
