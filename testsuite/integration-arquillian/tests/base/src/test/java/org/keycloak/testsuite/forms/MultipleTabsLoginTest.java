@@ -17,6 +17,8 @@
 
 package org.keycloak.testsuite.forms;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.keycloak.models.Constants.CLIENT_DATA;
 import static org.keycloak.testsuite.AssertEvents.DEFAULT_REDIRECT_URI;
@@ -201,7 +203,7 @@ public class MultipleTabsLoginTest extends AbstractTestRealmKeycloakTest {
         // Simulate incorrect login attempt to make sure that URL is on LoginActionsService URL
         loginPage.login("invalid", "invalid");
         String loginUrl = driver.getCurrentUrl();
-        Assert.assertTrue(UriUtils.decodeQueryString(new URL(loginUrl).getQuery()).containsKey(CLIENT_DATA));
+        Assert.assertTrue(UriUtils.decodeQueryString(Urls.create(loginUrl, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getQuery()).containsKey(CLIENT_DATA));
         getLogger().info("URL in tab1: " + driver.getCurrentUrl());
 
         oauth.openLoginForm();
@@ -434,7 +436,7 @@ public class MultipleTabsLoginTest extends AbstractTestRealmKeycloakTest {
             // open a new tab performing the passive check
             String passiveCheckUrl = oauth.responseType("none").prompt("none").getLoginFormUrl();
             util.newTab(passiveCheckUrl);
-            MatcherAssert.assertThat(new URL(oauth.getDriver().getCurrentUrl()).getQuery(), Matchers.containsString("error=login_required"));
+            MatcherAssert.assertThat(Urls.create(oauth.getDriver().getCurrentUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getQuery(), Matchers.containsString("error=login_required"));
 
             // continue with the login in the first tab
             util.switchToTab(originalTab);

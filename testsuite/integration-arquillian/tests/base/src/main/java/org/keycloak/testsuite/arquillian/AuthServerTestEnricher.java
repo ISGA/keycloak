@@ -16,6 +16,8 @@
  */
 package org.keycloak.testsuite.arquillian;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.jboss.arquillian.container.spi.ContainerRegistry;
@@ -175,7 +177,7 @@ public class AuthServerTestEnricher {
     }
 
     public static String getAuthServerBrowserContextRoot() throws MalformedURLException {
-        return getAuthServerBrowserContextRoot(new URL(getAuthServerContextRoot()));
+        return getAuthServerBrowserContextRoot(Urls.create(getAuthServerContextRoot(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS));
     }
 
     public static String getAuthServerBrowserContextRoot(URL contextRoot) {
@@ -332,10 +334,10 @@ public class AuthServerTestEnricher {
 
     private ContainerInfo updateWithAuthServerInfo(ContainerInfo authServerInfo, int clusterPortOffset) {
         try {
-            URL contextRoot = new URL(getAuthServerContextRoot(clusterPortOffset));
+            URL contextRoot = Urls.create(getAuthServerContextRoot(clusterPortOffset), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
             authServerInfo.setContextRoot(contextRoot);
-            authServerInfo.setBrowserContextRoot(new URL(getAuthServerBrowserContextRoot(contextRoot)));
+            authServerInfo.setBrowserContextRoot(Urls.create(getAuthServerBrowserContextRoot(contextRoot), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS));
         } catch (MalformedURLException ex) {
             throw new IllegalArgumentException(ex);
         }

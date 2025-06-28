@@ -16,6 +16,8 @@
  */
 package org.keycloak.testsuite.arquillian.containers;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
@@ -112,9 +114,9 @@ public class InfinispanServerDeployableContainer implements DeployableContainer<
 
             long startTimeMillis = System.currentTimeMillis();
             long startupTimeoutMillis = 30 * 1000;
-            URL consoleURL = new URL(String.format("%s://localhost:%s/console/",
+            URL consoleURL = Urls.create(String.format("%s://localhost:%s/console/",
                     CACHE_SERVER_AUTH ? "https" : "http",
-                    11222 + configuration.getPortOffset()));
+                    11222 + configuration.getPortOffset()), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 
             while (true) {
                 Thread.sleep(1000);

@@ -1,5 +1,7 @@
 package org.keycloak.testsuite.oauth;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -93,13 +95,13 @@ public class OAuthScopeInTokenResponseTest extends AbstractKeycloakTest {
         
         oauth.scope("user openid phone");
         oauth.openLoginForm();
-        MultivaluedHashMap<String, String> queryParams = UriUtils.decodeQueryString(new URL(driver.getCurrentUrl()).getQuery());
+        MultivaluedHashMap<String, String> queryParams = UriUtils.decodeQueryString(Urls.create(driver.getCurrentUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getQuery());
         assertEquals("invalid_scope", queryParams.getFirst("error"));
         assertTrue(queryParams.getFirst("error_description").startsWith("Invalid scopes"));
 
         oauth.scope("user");
         oauth.openLoginForm();
-        queryParams = UriUtils.decodeQueryString(new URL(driver.getCurrentUrl()).getQuery());
+        queryParams = UriUtils.decodeQueryString(Urls.create(driver.getCurrentUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getQuery());
         assertEquals("invalid_scope", queryParams.getFirst("error"));
         assertTrue(queryParams.getFirst("error_description").startsWith("Invalid scopes"));
 

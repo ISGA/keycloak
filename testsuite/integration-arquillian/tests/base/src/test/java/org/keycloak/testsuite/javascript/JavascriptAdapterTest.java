@@ -1,5 +1,7 @@
 package org.keycloak.testsuite.javascript;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.jboss.arquillian.graphene.page.Page;
 import org.junit.Before;
 import org.junit.Rule;
@@ -536,7 +538,7 @@ public class JavascriptAdapterTest extends AbstractJavascriptTest {
 
         testExecutor.login(loginOptions, (JavascriptStateValidator) (driver, output, events) -> {
             try {
-                String queryString = new URL(driver.getCurrentUrl()).getQuery();
+                String queryString = Urls.create(driver.getCurrentUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getQuery();
                 String claimsParam = UriUtils.decodeQueryString(queryString).getFirst(OIDCLoginProtocol.CLAIMS_PARAM);
                 Assert.assertNull(claimsParam);
             } catch (IOException ioe) {
@@ -555,7 +557,7 @@ public class JavascriptAdapterTest extends AbstractJavascriptTest {
 
         testExecutor.login(loginOptions, (JavascriptStateValidator) (driver, output, events) -> {
             try {
-                String queryString = new URL(driver.getCurrentUrl()).getQuery();
+                String queryString = Urls.create(driver.getCurrentUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getQuery();
                 String claimsParam = UriUtils.decodeQueryString(queryString).getFirst(OIDCLoginProtocol.CLAIMS_PARAM);
                 Assert.assertNotNull(claimsParam);
 
@@ -582,7 +584,7 @@ public class JavascriptAdapterTest extends AbstractJavascriptTest {
 
         testExecutor.login(loginOptions, (JavascriptStateValidator) (driver, output, events) -> {
             try {
-                String queryString = new URL(driver.getCurrentUrl()).getQuery();
+                String queryString = Urls.create(driver.getCurrentUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getQuery();
                 String acrValues = UriUtils.decodeQueryString(queryString).getFirst(OIDCLoginProtocol.ACR_PARAM);
                 Assert.assertNull(acrValues);
             } catch (IOException ioe) {
@@ -598,7 +600,7 @@ public class JavascriptAdapterTest extends AbstractJavascriptTest {
 
         testExecutor.login(loginOptions, (JavascriptStateValidator) (driver, output, events) -> {
             try {
-                String queryString = new URL(driver.getCurrentUrl()).getQuery();
+                String queryString = Urls.create(driver.getCurrentUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getQuery();
                 String acrValuesParam = UriUtils.decodeQueryString(queryString).getFirst(OIDCLoginProtocol.ACR_PARAM);
                 Assert.assertNotNull(acrValuesParam);
                 assertThat(acrValuesParam, is("2fa"));

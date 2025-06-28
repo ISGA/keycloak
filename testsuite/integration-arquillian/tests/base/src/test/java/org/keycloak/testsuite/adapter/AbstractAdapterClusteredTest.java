@@ -16,6 +16,8 @@
  */
 package org.keycloak.testsuite.adapter;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.keycloak.testsuite.arquillian.DeploymentTargetModifier.APP_SERVER_CURRENT;
@@ -153,7 +155,7 @@ public abstract class AbstractAdapterClusteredTest extends AbstractServletsAdapt
 
     protected String getProxiedUrl(URL url) {
         try {
-            return new URL(url.getProtocol(), url.getHost(), HTTP_PORT_NODE_REVPROXY, url.getFile()).toString();
+            return Urls.create(url.getProtocol(), url.getHost(), HTTP_PORT_NODE_REVPROXY, url.getFile(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).toString();
         } catch (MalformedURLException ex) {
             throw new RuntimeException(ex);
         }

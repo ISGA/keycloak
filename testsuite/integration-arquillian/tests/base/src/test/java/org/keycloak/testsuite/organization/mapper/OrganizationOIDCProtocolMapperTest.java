@@ -17,6 +17,8 @@
 
 package org.keycloak.testsuite.organization.mapper;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
@@ -494,7 +496,7 @@ public class OrganizationOIDCProtocolMapperTest extends AbstractOrganizationTest
         oauth.scope("organization:unknown");
         oauth.realm(TEST_REALM_NAME);
         oauth.openLoginForm();
-        MultivaluedHashMap<String, String> queryParams = UriUtils.decodeQueryString(new URL(driver.getCurrentUrl()).getQuery());
+        MultivaluedHashMap<String, String> queryParams = UriUtils.decodeQueryString(Urls.create(driver.getCurrentUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getQuery());
         assertEquals("invalid_scope", queryParams.getFirst("error"));
     }
 

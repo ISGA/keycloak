@@ -17,6 +17,8 @@
 
 package org.keycloak.testsuite.admin;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -228,7 +230,7 @@ public class ImpersonationTest extends AbstractKeycloakTest {
         driver.navigate().to(loginFormUrl);
         appPage.assertCurrent();
         //KEYCLOAK-12783
-        Assert.assertEquals("/auth/realms/master/app/auth", new URL(DroneUtils.getCurrentDriver().getCurrentUrl()).getPath());
+        Assert.assertEquals("/auth/realms/master/app/auth", Urls.create(DroneUtils.getCurrentDriver().getCurrentUrl(), Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).getPath());
 
         // Remove test client
         ApiUtil.findClientByClientId(realm, "test-app").remove();
