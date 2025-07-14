@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 
 import org.jboss.logging.Logger;
 import org.keycloak.OAuth2Constants;
@@ -79,7 +80,7 @@ public class MigrationContext {
         String file = getOfflineTokenLocation();
         logger.infof("Saving offline token to file: %s, Offline token is: %s", file, offlineToken);
 
-        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)))) {
+        try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(file.toPath()))) {
             writer.print(offlineToken);
         }
     }
