@@ -33,7 +33,7 @@
 
     <properties>
         <selenium.version>4.23.1</selenium.version>
-        <selenium.html.unit.version>4.23.0</selenium.html.unit.version>
+        <selenium.html.unit.version>4.34.0</selenium.html.unit.version>
     </properties>
 
     <dependencies>
